@@ -1,0 +1,104 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## OS
+.DS_Store
+.DS_Store?
+*.swp
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+## Build generated
+build/
+DerivedData/
+
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+## Other
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+#
+# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
+# Packages/
+# Package.pins
+.build/
+
+# CocoaPods
+#
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+#
+# Pods/
+
+# Carthage
+#
+# Add this line if you want to avoid checking in source code from Carthage dependencies.
+# Carthage/Checkouts
+
+Carthage/Build
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/#source-control
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+Package.pins
+Calatrava.xcodeproj
+Workspace/runtime/calatrava.log
+Workspace/static/resume.pdf
+/Package.resolved
+/Workspace/static/_md
+/Workspace/static/img/post
+/Workspace/templates/posts/*.html
+/Workspace/templates/corpus/*.html
+/Workspace/static/_corpus
+/Workspace/static/_posts
+/Workspace/static/img/corpus/*.png
+/Workspace/static/img/corpus/*.mp4
+/Workspace/static/img/corpus/*.jpg
+/Workspace/static/img/corpus/*.JPG
+/Workspace/static/img/corpus/*.jpeg
+/Workspace/static/img/corpus/*.gif
+/Workspace/static/img/corpus/*.mov
+/Workspace/static/img/instagram/*.png
+/Workspace/static/img/bilibili/*.jpg
+/Workspace/static/img/bilibili/*.png
+/Workspace/static/*.md
+/Workspace/templates/_posts
+/Workspace/templates/_corpus
+/ins.json
+/Workspace/pjango.log
