@@ -55,6 +55,10 @@ class ResponderPlugin: PCHTTPFilterPlugin {
             }
         }()
         
+        for header in req.headers {
+            curl.addHeader(header.0, value: header.1)
+        }
+        
         curl.addHeader(.custom(name: "watchdog_ip"), value: ip)
         curl.addHeader(.custom(name: "watchdog_port"), value: "\(port)")
         
@@ -62,6 +66,13 @@ class ResponderPlugin: PCHTTPFilterPlugin {
             pjangoHttpResponse(SERVER_NOT_FOND_RESPONSE)(req, res)
             return false
         }
+        
+        res.status = HTTPResponseStatus.statusFrom(code: response.responseCode)
+        
+        for header in response.headers {
+            res.addHeader(header.0, value: header.1)
+        }
+        
         pjangoHttpResponse(response.bodyBytes)(req, res)
     
         return false
