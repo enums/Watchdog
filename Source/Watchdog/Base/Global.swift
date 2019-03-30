@@ -10,7 +10,13 @@ import Foundation
 import SwiftyJSON
 import PerfectLib
 
-var WEBSITE_HOSTS = Dictionary<String, Int>()
+#if os(macOS)
+let WEBSITE_HOST = "watchdog.enumsblogtest.com"
+#else
+let WEBSITE_HOST = "watchdog.enumsblog.com"
+#endif
+
+var REDIRECTION_HOSTS = Dictionary<String, Int>()
 
 func loadHostsConfig() {
 #if os(macOS)
@@ -21,11 +27,5 @@ func loadHostsConfig() {
 #endif
     let configFile = File.init(configPath)
     let content = (try? configFile.readString()) ?? ""
-    WEBSITE_HOSTS = JSON.init(parseJSON: content).dictionaryObject as? [String: Int] ?? [:]
-}
-
-func printHostsConfig() {
-    WEBSITE_HOSTS.forEach { (key, val) in
-        print("\(val): \(key)")
-    }
+    REDIRECTION_HOSTS = JSON.init(parseJSON: content).dictionaryObject as? [String: Int] ?? [:]
 }

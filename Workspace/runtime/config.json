@@ -1,7 +1,11 @@
 {
     "macos_workspace_path": "/Users/enum/Developer/Watchdog/Workspace",
     "workspace_path": "/home/uftp/Watchdog/Workspace",
-
+    
+    "base_dir": "",
+    "template_dir": "templates",
+    "static_dir": "static",
+    
     "port": 80,
-    "log_debug": false
+    "log_debug": false,
 }

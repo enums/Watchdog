@@ -1,5 +1,5 @@
 //
-//  ResponderPlugin.swift
+//  RouterFilterPlugin.swift
 //  Watchdog
 //
 //  Created by 郑宇琦 on 2019/3/24.
@@ -9,40 +9,46 @@ import Foundation
 import Pjango
 import PerfectHTTP
 import PerfectCURL
-import cURL
 
-fileprivate let HOST_NOT_FOND_RESPONSE = """
-<html>
-<head>
-<meta charset="utf-8">
-</head>
-<body>
-域名不正确
-</body>
-</html>
-"""
+#if os(macOS)
+let MONITOR_HOST = "monitor.enumsblogtest.com"
+#else
+let MONITOR_HOST = "monitor.enumsblog.com"
+#endif
 
-fileprivate let SERVER_NOT_FOND_RESPONSE = """
-<html>
-<head>
-<meta charset="utf-8">
-</head>
-<body>
-施工中...
-</body>
-</html>
-"""
+class RouterLogger {
+    
+    static let shared = RouterLogger.init()
+    
+    var queue = DispatchQueue.init(label: "logger")
+    
+    func log(domain: String) {
+        queue.async {
+            let url = "http://\(MONITOR_HOST)/api/log?domain=\(domain)"
+            let curl = CURLRequest.init(url)
+            curl.addHeader(.custom(name: "monitor_command"), value: "skip")
+            _ = try? curl.perform()
+        }
+    }
+}
 
-class ResponderPlugin: PCHTTPFilterPlugin {
+class RouterFilterPlugin: PCHTTPFilterPlugin {
     
     open override func requestFilter(req: HTTPRequest, res: HTTPResponse) -> Bool {
-        guard let host = req.header(.host), let serverPort = WEBSITE_HOSTS[host] else {
-            pjangoHttpResponse(HOST_NOT_FOND_RESPONSE)(req, res)
+        guard let host = req.header(.host) else {
+            pjangoHttpRedirect(url: "http://\(WEBSITE_HOST)/domain_error")(req, res)
+            return false
+        }
+        if host == WEBSITE_HOST {
+            return true
+        }
+        guard let serverPort = REDIRECTION_HOSTS[host] else {
+            pjangoHttpRedirect(url: "http://\(WEBSITE_HOST)/domain_error")(req, res)
             return false
         }
         let ip = req.remoteAddress.host
         let port = req.remoteAddress.port
-        let url = "http://\(host):\(serverPort)/\(req.uri)"
+        let url = "http://\(host):\(serverPort)\(req.uri)"
         
         let curl: CURLRequest = {
             switch req.method {
@@ -63,7 +69,7 @@ class ResponderPlugin: PCHTTPFilterPlugin {
         curl.addHeader(.custom(name: "watchdog_port"), value: "\(port)")
         
         guard let response = try? curl.perform() else {
-            pjangoHttpResponse(SERVER_NOT_FOND_RESPONSE)(req, res)
+            pjangoHttpRedirect(url: "http://\(WEBSITE_HOST)/website_dead")(req, res)
             return false
         }
         
@@ -74,6 +80,10 @@ class ResponderPlugin: PCHTTPFilterPlugin {
         }
         
         pjangoHttpResponse(response.bodyBytes)(req, res)
+        
+        if req.header(.custom(name: "monitor_command")) != "skip" {
+            RouterLogger.shared.log(domain: host)
+        }
     
         return false
     }
